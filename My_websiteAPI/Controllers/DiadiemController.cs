@@ -220,7 +220,7 @@ namespace My_websiteAPI.Controllers
                 //tinhthanh
                 if (loaisukien.HasValue && loaisukien > 0)
                 {
-                    dt = dt.Where(p => p.Loaisukien == loaisukien);
+                    dt = dt.Where(p => p.Loaisukien == loaisukien); 
                 }
 
                 #endregion
