@@ -49,7 +49,7 @@ namespace My_websiteAPI.Controllers
             var checkpass = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!checkpass)
             {
-                return Unauthorized(new { message = "Mật khẩu không chính xác!, vui lòng thửu lại!" });
+                return Unauthorized(new { message = "Mật khẩu không chính xác!, vui lòng thử lại!" });
             }
             var thongtin = new List<Claim>
                 {

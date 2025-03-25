@@ -373,6 +373,11 @@ namespace My_websiteAPI.Migrations
                     b.Property<bool>("Tinhtrang")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("urlmap")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.HasKey("DiadiemId");
 
                     b.HasIndex("DanhchoId");

@@ -29,6 +29,7 @@ namespace My_websiteAPI.ModelView
         public string Image3 { get; set; }
         public string Image4 { get; set; }
         public string Image5 { get; set; }
+        public string urlmap { get; set; }
     }
     public class DiadiemMV
     {
@@ -55,5 +56,6 @@ namespace My_websiteAPI.ModelView
         public string Image3 { get; set; }
         public string Image4 { get; set; }
         public string Image5 { get; set; }
+        public string urlmap { get; set; }
     }
 }

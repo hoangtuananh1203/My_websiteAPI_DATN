@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace My_websiteAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class MyDBv4 : Migration
+    public partial class DatabaseApiV5DATN : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -281,7 +281,8 @@ namespace My_websiteAPI.Migrations
                     Image2 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Image3 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Image4 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Image5 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    Image5 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    urlmap = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {

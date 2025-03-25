@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace My_websiteAPI.Migrations
 {
     [DbContext(typeof(MyDBcontext))]
-    [Migration("20250324124524_MyDBv4")]
-    partial class MyDBv4
+    [Migration("20250325151148_DatabaseApiV5DATN")]
+    partial class DatabaseApiV5DATN
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -375,6 +375,11 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<bool>("Tinhtrang")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("urlmap")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("DiadiemId");
 

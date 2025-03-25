@@ -32,7 +32,7 @@ namespace My_websiteAPI.Controllers
             var totalItems = await dt.CountAsync();
             if (totalItems == 0)
             {
-                return NotFound(new { message = "Không tìm thấy đóng góp nào!" });
+                return NotFound(new { message = "Không tìm thấy đánh giá nào!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
@@ -181,7 +181,21 @@ namespace My_websiteAPI.Controllers
             return Ok(new {message="Xoá đánh giá thành công"});
 
         }
+        [HttpGet("TinhtoanDanhgia")]
+        public async Task<IActionResult> TinhtoanDanhgia(int id)
+        {
+            var tongdanhgia = await _context.Danhgias.CountAsync(p => p.DiadiemId == id);
+           
+            var tongdiem = await _context.Danhgias.Where(p => p.DiadiemId == id).SumAsync(p => (int?)p.Diem) ?? 0;
 
+            float trungbinhdiem = (tongdanhgia > 0) ? (float)tongdiem / tongdanhgia : 0;
+
+            return Ok(new
+            {
+                tongdanhgia = tongdanhgia,
+                trungbinhdiem = trungbinhdiem
+            });
+        }
 
 
 

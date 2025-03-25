@@ -14,7 +14,7 @@ namespace My_websiteAPI.Model
         [Required]
         [StringLength(150)]
         public string Motangan { get; set; }// Mô tả ngắn
-        [Required]
+        
         [StringLength(100)]
         public string Mocuadongcua { get; set; }// mocuadongcua
         [Required]
@@ -29,7 +29,7 @@ namespace My_websiteAPI.Model
        
         [Phone(ErrorMessage = "Vui lòng nhập đúng định dạng số điện thoại!")]
         public string SDT { get; set; } // SDT
-        [Required]
+      
         public int Gia { get; set; } // giá cả 
         public Boolean Tinhtrang { get; set; } // đóng == flase mở ==true
         [Required]
@@ -64,6 +64,10 @@ namespace My_websiteAPI.Model
         [Required]
         [StringLength(50)]
         public string Image5 { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string urlmap { get; set; }
+
 
     }
 }

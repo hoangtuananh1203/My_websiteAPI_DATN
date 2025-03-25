@@ -60,6 +60,7 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
+                urlmap=p.urlmap,
                
 
             }).ToListAsync();
@@ -107,6 +108,7 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
+                urlmap = p.urlmap,
 
 
             }).ToListAsync();
@@ -154,6 +156,7 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
+                urlmap = p.urlmap,
 
 
             }).ToListAsync();
@@ -281,6 +284,7 @@ namespace My_websiteAPI.Controllers
                     Image3 = p.Image3,
                     Image4 = p.Image4,
                     Image5 = p.Image5,
+                    urlmap = p.urlmap,
 
 
                 }).ToListAsync();
@@ -349,6 +353,7 @@ namespace My_websiteAPI.Controllers
                     Image3 = p.Image3,
                     Image4 = p.Image4,
                     Image5 = p.Image5,
+                    urlmap = p.urlmap,
                 };
                 await _context.Diadiem.AddAsync(newdt);
                 await _context.SaveChangesAsync();
@@ -397,6 +402,7 @@ namespace My_websiteAPI.Controllers
                     sk.Image3 = p.Image3;
                     sk.Image4 = p.Image4;
                     sk.Image5 = p.Image5;
+                    sk.urlmap = p.urlmap;
 
 
                 await _context.SaveChangesAsync();
