@@ -56,7 +56,7 @@ namespace My_websiteAPI.Controllers
                     new Claim(ClaimTypes.Email, model.Email),
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim("Username", user.UserName),
-                    new Claim("Phonenumber", user.PhoneNumber),
+                    
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
                 };
             var roles = await _userManager.GetRolesAsync(user);
@@ -90,7 +90,7 @@ namespace My_websiteAPI.Controllers
                 UserName= model.Username,
                 FirstName= model.FirstName,
                 LastName= model.LastName,
-                PhoneNumber= model.sdt,
+           
             };
              var result = await _userManager.CreateAsync(user,model.Password);
             if (result.Succeeded)
@@ -125,7 +125,7 @@ namespace My_websiteAPI.Controllers
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                PhoneNumber = model.sdt,
+               
                 UserName = model.Username
             };
 

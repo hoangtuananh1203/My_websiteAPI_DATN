@@ -70,16 +70,22 @@ namespace My_websiteAPI.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchDonggop(string search = "",int page=1)
+        public async Task<IActionResult> SearchDonggop(string? search = "",int page=1, int? trangthai=null)
         {
-            if (string.IsNullOrEmpty(search))
-            {
-                return BadRequest(new { mesage = "Vui lòng nhập trường thông tin tìm kiếm!" });
-            }
+          
             try
             {
                 var dt = _context.Donggop.AsQueryable();
-                dt = dt.Where(p => p.Tieude.Contains(search));
+                if (!string.IsNullOrEmpty(search))
+                {
+                    dt = dt.Where(p => p.Tieude.Contains(search));
+                }
+                if (trangthai.HasValue)
+                {
+                    dt = dt.Where(p => p.trangthai == trangthai);
+
+                }
+
                 var totalItems = await dt.CountAsync();
                 if (totalItems == 0)
                 {

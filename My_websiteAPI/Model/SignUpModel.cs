@@ -8,7 +8,7 @@ namespace My_websiteAPI.Model
         public string FirstName { get; set; } 
 
         public string LastName { get; set; } 
-        public string sdt { get; set; }
+      
         [Required, EmailAddress]
         public string Email { get; set; } = null!;
         [Required]
