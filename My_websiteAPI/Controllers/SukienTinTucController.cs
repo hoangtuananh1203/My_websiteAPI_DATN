@@ -31,7 +31,7 @@ namespace My_websiteAPI.Controllers
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
-            var list =await dt.Select(p=> new SuKienTintucMV
+            var list =await dt.Select(p=> new SuKienTintucMV1
                 {
                     SukienId = p.SukienId,
                     Tieude = p.Tieude,
@@ -51,7 +51,11 @@ namespace My_websiteAPI.Controllers
                     Image3 = p.Image3,
                     Image4 = p.Image4,
                     Image5 = p.Image5,
-                    Gia = p.Gia
+                    Gia = p.Gia,
+                    LoaiHinhId = p.LoaiHinhId,
+                    TinhThanhId=p.TinhThanhId,
+                    DanhchoId= p.DanhchoId,
+                    LoaisukienId=p.LoaiHinhId
 
                 }).ToListAsync();
             
@@ -76,7 +80,7 @@ namespace My_websiteAPI.Controllers
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
-            var list = await dt.Select(p => new SuKienTintucMV
+            var list = await dt.Select(p => new SuKienTintucMV1
             {
                 SukienId = p.SukienId,
                 Tieude = p.Tieude,
@@ -96,7 +100,11 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
-                Gia = p.Gia
+                Gia = p.Gia,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                DanhchoId = p.DanhchoId,
+                LoaisukienId = p.LoaiHinhId
 
             }).ToListAsync();
 
@@ -123,7 +131,7 @@ namespace My_websiteAPI.Controllers
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
-            var list = await dt.Select(p => new SuKienTintucMV
+            var list = await dt.Select(p => new SuKienTintucMV1
             {
                 SukienId = p.SukienId,
                 Tieude = p.Tieude,
@@ -143,7 +151,11 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
-                Gia = p.Gia
+                Gia = p.Gia,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                DanhchoId = p.DanhchoId,
+                LoaisukienId = p.LoaiHinhId
 
             }).ToListAsync();
 
@@ -193,7 +205,7 @@ namespace My_websiteAPI.Controllers
          
             try
             {
-                DateTime now = DateTime.Now.Date;
+                DateTime now = DateTime.Now;
                 var dt = _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).AsQueryable();
 
                 #region loc theo
@@ -235,7 +247,7 @@ namespace My_websiteAPI.Controllers
                             break;
                      
                         case "date":
-                            dt = dt.Where(p=>p.DateOpen.Date>=now).OrderBy(p => p.DateOpen);
+                            dt = dt.Where(p=>p.DateOpen>=now).OrderBy(p => p.DateOpen);
                             break;
                         default:
                             dt = dt.OrderByDescending(p => p.DateOpen); 
@@ -244,20 +256,14 @@ namespace My_websiteAPI.Controllers
                     }
                 }
                 #endregion
-
-
-
-
-
-
                 var totalItems = await dt.CountAsync();
                 if (totalItems == 0)
                 {
-                    return NotFound(new { message = "Không tìm thấy sự kiện -  tin tức nào!" });
+                    return Ok(new { message = "Không tìm thấy sự kiện -  tin tức nào!" });
                 }
                 var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
                 dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
-                var list = await dt.Select(p => new SuKienTintucMV
+                var list = await dt.Select(p => new SuKienTintucMV1
                 {
                     SukienId = p.SukienId,
                     Tieude = p.Tieude,
@@ -277,7 +283,11 @@ namespace My_websiteAPI.Controllers
                     Image3 = p.Image3,
                     Image4 = p.Image4,
                     Image5 = p.Image5,
-                    Gia = p.Gia
+                    Gia = p.Gia,
+                    LoaiHinhId = p.LoaiHinhId,
+                    TinhThanhId = p.TinhThanhId,
+                    DanhchoId = p.DanhchoId,
+                    LoaisukienId = p.LoaiHinhId
 
                 }).ToListAsync();
 
@@ -305,7 +315,7 @@ namespace My_websiteAPI.Controllers
 
         public async Task<IActionResult> Create(SuKienTintucDTO p)
         {
-            var requiredFields = new List<string> { p.Tieude, p.Mota1, p.Motangan, p.Diachi, p.SDT, p.Imagemain, p.Image1, p.Image2, p.Image3, p.Image4, p.Image5 };
+            var requiredFields = new List<string> { p.Tieude, p.Mota1, p.Motangan, p.Diachi, p.Imagemain, p.Image1, p.Image2, p.Image3, p.Image4, p.Image5 };
 
             // Kiểm tra nếu bất kỳ trường nào bị rỗng
             if (requiredFields.Any(string.IsNullOrEmpty))

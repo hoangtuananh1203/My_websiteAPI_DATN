@@ -82,6 +82,33 @@ namespace My_websiteAPI.Controllers
             }
         }
 
+        [HttpGet("searchid")]
+        public async Task<IActionResult> SearchDoituongid(int id=0 )
+        {
+            if (id<=0)
+            {
+                return BadRequest(new { mesage = "Vui lòng nhập id!" });
+            }
+            try
+            {
+                var dt = await _context.Danhcho.FirstOrDefaultAsync(p => p.DanhchoId == id);
+                if (dt==null)
+                {
+                    return NotFound(new { message = "Không tìm thấy đối tượng nào!" });
+                }
+                return Ok(dt);
+            }
+
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { message = "Lỗi!", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi máy chủ!", error = ex.Message });
+            }
+        }
+
 
         [HttpPost("Create")]
         [Authorize(Roles =Phanquyen.Admin)]
@@ -97,7 +124,7 @@ namespace My_websiteAPI.Controllers
                 var doituong = await _context.Danhcho.FirstOrDefaultAsync(p => p.Doituong == model.Doituong);
                 if (doituong != null)
                 {
-                    return BadRequest(new { messase = "Đối tượng đã tồn tại trong hệ thống!" });
+                    return Ok(new { message = "Đối tượng đã tồn tại trong hệ thống!" });
                 }
                 var newdt = new Danhcho
                 {
@@ -135,7 +162,7 @@ namespace My_websiteAPI.Controllers
                 var doituong = await _context.Danhcho.FirstOrDefaultAsync(p => p.Doituong == model.Doituong && p.DanhchoId != id);
                 if (doituong != null)
                 {
-                    return BadRequest(new { messase = "Đối tượng đã tồn tại trong hệ thống!" });
+                    return Ok(new { message = "Đối tượng đã tồn tại trong hệ thống!" });
                 }
 
                 searchchdt.Doituong = model.Doituong;

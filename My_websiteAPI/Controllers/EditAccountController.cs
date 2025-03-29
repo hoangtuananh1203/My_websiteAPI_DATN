@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using My_websiteAPI.Data;
 using My_websiteAPI.ModelView;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace My_websiteAPI.Controllers
@@ -18,6 +20,8 @@ namespace My_websiteAPI.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private static int Page_SIZE { get; set; } = 2;
+
 
         public EditAccountController
             (
@@ -56,39 +60,93 @@ namespace My_websiteAPI.Controllers
         }
         [HttpGet]
       
-        public async Task<IActionResult> GetAllAccount()
+        public async Task<IActionResult> GetAllAccount(int page=1)
         {
-            var users = await _context.Users
-                .Select(u => new
-                {
-                    u.Id,
-                    u.UserName,
-                    u.Email
-                })
-                .ToListAsync();
+           
 
-            return Ok(users);
+            var users = _context.Users.AsQueryable();
+
+            var totalItems = users.Count();
+            if (totalItems == 0)
+            {
+                return NotFound(new { mesage = "Không tìm thấy tài khoản nào!" });
+            }
+            var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
+            users = users.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
+
+
+            var list = await users.Select(p => new
+            {
+                Iduser = p.Id,
+                p.UserName,
+                p.Email,
+               
+            }).ToListAsync();
+
+            return Ok(new
+            {
+                items = list,
+                totalPages = totalPages
+            });
         }
         [HttpGet("searchAccount")]
         [Authorize(Roles =Phanquyen.Admin)]
         public async Task<IActionResult> TimkiemAccount(string email)
         {
-                var user = await _context.Users
-            .Where(p => p.Email == email)
+
+                var user =  _context.Users
+            .Where(p => p.Email.ToLower().Contains(email.ToLower()))
             .Select(u => new
             {
                 u.Id,
                 u.UserName,
                 u.Email
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefault();
 
                 if (user == null)
                 {
-                    return NotFound(new { message = "Không tìm thấy tài khoản!" });
+                
+                return Ok(new{   message = "Không tìm thấy tài khoản!",
+                  
+
+                });
+                
                 }
 
                 return Ok(user);
+        }
+        [HttpPut("datlaimk")]
+        [Authorize(Roles = Phanquyen.Admin)]
+        public async Task<IActionResult> Datlaimk(string iduser)
+        {
+
+            var user = await _userManager.FindByIdAsync(iduser);
+            if (user == null)
+            {
+                return NotFound(new { message = "Người dùng không tồn tại!" });
+            }
+
+            if (user == null)
+            {
+
+                return Ok(new{   message = "Không tìm thấy tài khoản!",  });
+
+            }
+
+
+            string newPassword = "Ictu123@";
+
+          
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Lỗi khi đặt lại mật khẩu!", errors = result.Errors });
+            }
+
+            return Ok(new { message = "Đặt lại mật khẩu thành công! Mật khẩu mới là: Ictu123@" });
         }
         [HttpPut]
         [Authorize]
@@ -113,7 +171,7 @@ namespace My_websiteAPI.Controllers
             var checkpass = await _userManager.CheckPasswordAsync(user, model.oldPasss);
             if (!checkpass)
             {
-                return Unauthorized(new { message = "Mật khẩu không chính xác!, vui lòng thửu lại!" });
+                return Unauthorized(new { message = "Mật khẩu không chính xác!, vui lòng thử lại!" });
             }
         var result =    await _userManager.ChangePasswordAsync(user, model.oldPasss, model.newPasss);
             if (result.Succeeded)

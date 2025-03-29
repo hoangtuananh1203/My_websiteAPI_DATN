@@ -68,12 +68,18 @@ namespace My_websiteAPI.Controllers
         [Authorize(Roles = Phanquyen.Admin)]
         public async Task<IActionResult> CreateProvince (TinhThanhDTO model)
         {
+
             if (string.IsNullOrWhiteSpace(model.TenTinh))
             {
                 return BadRequest(new {message="Vui lòng không bỏ trống tên tỉnh!"});
             }
             else
             {
+                bool result = await _context.TinhThanh.AnyAsync(p => p.TenTinh == model.TenTinh && p.TinhThanhId != model.IdTinh);
+                if (result == true)
+                {
+                    return Ok(new { message = "Tỉnh thành này đã có trong hệ thống rồi!" });
+                }
                 var province = new TinhThanh
                 {
                     TenTinh = model.TenTinh
@@ -103,7 +109,7 @@ namespace My_websiteAPI.Controllers
             bool result =await _context.TinhThanh.AnyAsync(p => p.TenTinh == model.TenTinh && p.TinhThanhId !=id);
             if (result == true)
             {
-                return BadRequest(new { message = "Tỉnh thành này đã có trong hệ thống rồi!" });
+                return Ok(new { message = "Tỉnh thành này đã có trong hệ thống rồi!" });
             }
                     tinhthanh.TenTinh = model.TenTinh;
 

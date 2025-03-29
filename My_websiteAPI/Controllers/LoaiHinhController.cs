@@ -70,6 +70,11 @@ namespace My_websiteAPI.Controllers
             }
             else
             {
+                bool result = await _context.LoaiHinh.AnyAsync(p => p.TenLoai == model.TenLoai && p.LoaiHinhId != model.LoaiHinhId);
+                if (result == true)
+                {
+                    return BadRequest(new { message = "Loại hình này đã có trong hệ thống rồi!" });
+                }
                 var loaihinh = new LoaiHinh
                 {
                     TenLoai = model.TenLoai
