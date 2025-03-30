@@ -37,7 +37,7 @@ namespace My_websiteAPI.Controllers
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
 
 
-            var list = await dt.Select(p => new DiadiemMV
+            var list = await dt.Select(p => new DiadiemMV1
             {
                 DiadiemId = p.DiadiemId,
                 Tieude = p.Tieude,
@@ -46,13 +46,13 @@ namespace My_websiteAPI.Controllers
                 DateOC = p.DateOC,
                 Email = p.Email,
                 SDT = p.SDT,
-                Gia=p.Gia,
-                Tinhtrang=p.Tinhtrang,
-                Noidung=p.Noidung,
-                TinhThanh=p.TinhThanh.TenTinh,
-                LoaiHinh=p.LoaiHinhDL.TenLoai,
-                Danhcho=p.Danhcho.Doituong,
-                Luotxem=p.Luotxem,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
                 Loaisukien = GetLoaiSuKienName(p.Loaisukien),
                 Imagemain = p.Imagemain,
                 Image1 = p.Image1,
@@ -60,8 +60,12 @@ namespace My_websiteAPI.Controllers
                 Image3 = p.Image3,
                 Image4 = p.Image4,
                 Image5 = p.Image5,
-                urlmap=p.urlmap,
-               
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+
 
             }).ToListAsync();
 
@@ -201,7 +205,7 @@ namespace My_websiteAPI.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchDiaDiem(string? search, int? tinhthanh=null, int? loaisukien=null,string? sortBy="", int page=1)
+        public async Task<IActionResult> SearchDiaDiem(string? search, int? tinhthanh=null, int? loaisukien=null, int? loaihinh = null, int? doituong = null, string? sortBy="", int page=1)
         {
            
             try
@@ -219,6 +223,14 @@ namespace My_websiteAPI.Controllers
                 if (tinhthanh.HasValue && tinhthanh > 0)
                 {
                     dt = dt.Where(p => p.TinhThanhId == tinhthanh);
+                }
+                if (loaihinh.HasValue && loaihinh > 0)
+                {
+                    dt = dt.Where(p => p.LoaiHinhId == loaihinh);
+                }
+                if (doituong.HasValue && doituong > 0)
+                {
+                    dt = dt.Where(p => p.DanhchoId == doituong);
                 }
                 //tinhthanh
                 if (loaisukien.HasValue && loaisukien > 0)
@@ -255,13 +267,13 @@ namespace My_websiteAPI.Controllers
                 var totalItems = await dt.CountAsync();
                 if (totalItems == 0)
                 {
-                    return NotFound(new { mesage = "Không tìm thấy địa điểm nào!" });
+                    return Ok(new { message = "Không tìm thấy địa điểm nào!" });
                 }
                 var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
                 dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
 
 
-                var list = await dt.Select(p => new DiadiemMV
+                var list = await dt.Select(p => new DiadiemMV1
                 {
                     DiadiemId = p.DiadiemId,
                     Tieude = p.Tieude,
@@ -285,6 +297,10 @@ namespace My_websiteAPI.Controllers
                     Image4 = p.Image4,
                     Image5 = p.Image5,
                     urlmap = p.urlmap,
+                    DanhchoId = p.DanhchoId,
+                    LoaiHinhId = p.LoaiHinhId,
+                    TinhThanhId = p.TinhThanhId,
+                    LoaisukienId=p.Loaisukien,
 
 
                 }).ToListAsync();
@@ -340,7 +356,7 @@ namespace My_websiteAPI.Controllers
                     Email = p.Email,
                     SDT = p.SDT,
                     Gia = p.Gia,
-                    Tinhtrang = true,
+                    Tinhtrang = p.Tinhtrang,
                     Noidung = p.Noidung,
                    TinhThanhId = p.TinhThanhId,
                    DanhchoId =p.DanhchoId,

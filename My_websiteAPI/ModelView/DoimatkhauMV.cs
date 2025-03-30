@@ -8,4 +8,12 @@
         
         
     }
+    public class DoimatkhauMVA
+    {
+       
+        public string oldPasss { get; set; }
+        public string newPasss { get; set; }
+
+
+    }
 }

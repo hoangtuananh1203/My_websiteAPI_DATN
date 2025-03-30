@@ -63,8 +63,14 @@ namespace My_websiteAPI.Controllers
         public async Task<IActionResult> GetAllAccount(int page=1)
         {
            
+            var custommer =await  _context.Roles.FirstOrDefaultAsync(r => r.Name == Phanquyen.Custommer);
+            var sotaikhoannguoidung = await _context.Users.Where(pp =>  _context.UserRoles.Any(p => p.UserId == pp.Id && p.RoleId == custommer.Id)).CountAsync();
+            if (custommer == null)
+            {
+                return NotFound(new { message = "Không tìm thấy vai trò Admin!" });
+            }
 
-            var users = _context.Users.AsQueryable();
+            var users = _context.Users.Where(pp=>_context.UserRoles.Any(p=> p.UserId==pp.Id &&p.RoleId== custommer.Id)).AsQueryable();
 
             var totalItems = users.Count();
             if (totalItems == 0)
@@ -86,6 +92,7 @@ namespace My_websiteAPI.Controllers
             return Ok(new
             {
                 items = list,
+                sotaikhoannguoidung= sotaikhoannguoidung,
                 totalPages = totalPages
             });
         }
@@ -93,9 +100,15 @@ namespace My_websiteAPI.Controllers
         [Authorize(Roles =Phanquyen.Admin)]
         public async Task<IActionResult> TimkiemAccount(string email)
         {
+            var custommer = await _context.Roles.FirstOrDefaultAsync(r => r.Name == Phanquyen.Custommer);
 
-                var user =  _context.Users
-            .Where(p => p.Email.ToLower().Contains(email.ToLower()))
+            if (custommer == null)
+            {
+                return NotFound(new { message = "Không tìm thấy vai trò Admin!" });
+            }
+         
+
+            var user = _context.Users.Where(pp =>pp.Email.ToLower().Contains(email.ToLower()) && _context.UserRoles.Any(p => p.UserId == pp.Id && p.RoleId == custommer.Id))
             .Select(u => new
             {
                 u.Id,
@@ -148,9 +161,9 @@ namespace My_websiteAPI.Controllers
 
             return Ok(new { message = "Đặt lại mật khẩu thành công! Mật khẩu mới là: Ictu123@" });
         }
-        [HttpPut]
-        [Authorize]
-        public async Task<IActionResult> ChangPassword(DoimatkhauMV model)
+        [HttpPut("customer")]
+        [Authorize(Roles =Phanquyen.Custommer)]
+        public async Task<IActionResult> ChangPasswordcustom(DoimatkhauMV model)
         {
             if (!ModelState.IsValid)
             {
@@ -181,6 +194,42 @@ namespace My_websiteAPI.Controllers
             return BadRequest(new { message = "Đổi mật khẩu thất bại!" });
 
         }
+
+        [HttpPut("admin")]
+        [Authorize(Roles = Phanquyen.Admin)]
+        public async Task<IActionResult> ChangPassword(DoimatkhauMVA model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Vui lòng đăng nhập trước" });
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "Người dùng không tồn tại!" });
+            }
+
+            var checkpass = await _userManager.CheckPasswordAsync(user, model.oldPasss);
+            if (!checkpass)
+            {
+                return Unauthorized(new { message = "Mật khẩu không chính xác!, vui lòng thử lại!" });
+            }
+            var result = await _userManager.ChangePasswordAsync(user, model.oldPasss, model.newPasss);
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Đổi mật khẩu thành công!" });
+            }
+            return BadRequest(new { message = "Đổi mật khẩu thất bại!" });
+
+        }
+
+
 
 
 
