@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace My_websiteAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class DatabaseApiV5DATN : Migration
+    public partial class My_WebsiteV9 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,21 @@ namespace My_websiteAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BannerThrees",
+                columns: table => new
+                {
+                    BannerThreeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Image1 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Image2 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Image3 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BannerThrees", x => x.BannerThreeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -264,7 +279,7 @@ namespace My_websiteAPI.Migrations
                     Tieude = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Motangan = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Mocuadongcua = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Diachi = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Diachi = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     DateOC = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     SDT = table.Column<string>(type: "text", nullable: false),
@@ -282,7 +297,7 @@ namespace My_websiteAPI.Migrations
                     Image3 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Image4 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Image5 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    urlmap = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    urlmap = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -315,7 +330,7 @@ namespace My_websiteAPI.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Tieude = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Motangan = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Diachi = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Diachi = table.Column<string>(type: "text", nullable: false),
                     DateOpen = table.Column<DateTime>(type: "date", nullable: false),
                     DateClose = table.Column<DateTime>(type: "date", nullable: false),
                     Gia = table.Column<int>(type: "integer", nullable: false),
@@ -563,6 +578,9 @@ namespace My_websiteAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "BannerThrees");
 
             migrationBuilder.DropTable(
                 name: "Danhgias");

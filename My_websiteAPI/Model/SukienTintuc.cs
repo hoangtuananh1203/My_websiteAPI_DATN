@@ -12,10 +12,11 @@ namespace My_websiteAPI.Model
         [StringLength(150)]
         public string Tieude { get; set; }// Tên địa diểm  
         [Required]
-        [StringLength(150)]
+
+        [StringLength(300)]
         public string Motangan { get; set; }// Mota ngan
         [Required]
-        [StringLength(50)]
+        
         public string Diachi { get; set; } // Dia chi
         [Column(TypeName = "date")]
         public DateTime DateOpen { get; set; }

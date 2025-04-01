@@ -31,7 +31,7 @@ namespace My_websiteAPI.Controllers
             var totalItems = await dt.CountAsync();
             if (totalItems == 0)
             {
-                return NotFound(new { mesage = "Không tìm thấy địa điểm nào!" });
+                return Ok(new { mesage = "Không tìm thấy địa điểm nào!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
@@ -74,6 +74,209 @@ namespace My_websiteAPI.Controllers
                 items = list,
                 totalPages = totalPages
             });
+        }
+
+        [HttpGet("thinhhanh")]
+        public async Task<IActionResult> GetfiveIndex()
+        {
+            var dt2 = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Take(2).OrderByDescending(p=>p.Luotxem);
+            var dt3 =  _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Take(3).OrderByDescending(p=>p.Luotxem);
+
+         
+
+            var list2 = await dt2.Select(p => new DiadiemMV1
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+
+
+            }).ToListAsync();
+            var list3 = await dt3.Select(p => new DiadiemMV1
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+
+
+            }).ToListAsync();
+        
+            return Ok(new
+            {
+                items1 = list2,
+                items2 = list3,
+           
+
+            });
+        }
+        [HttpGet("ddmoi")]
+        public async Task<IActionResult> cacdiadiemmoi()
+        {
+            var dt2 = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p=>p.Loaisukien==LoaiDiadiem.Dulich).Take(4);
+            var dt3 = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p => p.Loaisukien == LoaiDiadiem.Amthuc).Take(4);
+
+
+
+            var list2 = await dt2.Select(p => new DiadiemMV1
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+
+
+            }).ToListAsync();
+            var list3 = await dt3.Select(p => new DiadiemMV1
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+
+
+            }).ToListAsync();
+
+            return Ok(new
+            {
+                items1 = list2,
+                items2 = list3,
+
+
+            });
+        }
+
+
+
+
+
+        [HttpGet("Find")]
+        public async Task<IActionResult> Finbyid(int id)
+        {
+            var p = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).FirstOrDefault(p => p.DiadiemId == id);
+            var diadem = new DiadiemMV1
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+                DanhchoId = p.DanhchoId,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                LoaisukienId = p.Loaisukien,
+            };
+            if (p == null)
+            {
+                return Ok(new { mesage = "Không tìm thấy địa điểm!" });
+            }
+            return Ok(diadem);
         }
         [HttpGet("danhcho")]
         public async Task<IActionResult> GetAllDanhcho(int id,int page=1)

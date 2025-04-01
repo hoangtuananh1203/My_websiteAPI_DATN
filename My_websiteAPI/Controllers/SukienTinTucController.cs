@@ -7,6 +7,7 @@ using My_websiteAPI.Data;
 using My_websiteAPI.Model;
 using My_websiteAPI.ModelView;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace My_websiteAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace My_websiteAPI.Controllers
             var totalItems = await dt.CountAsync();
             if (totalItems == 0)
             {
-                return NotFound(new { message = "Không tìm thấy sự kiện -  tin tức nào!" });
+                return Ok(new { message = "Không tìm thấy sự kiện -  tin tức nào!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
@@ -67,6 +68,46 @@ namespace My_websiteAPI.Controllers
                 totalPages = totalPages
             });
         }
+        [HttpGet("Find")]
+        public async Task<IActionResult> Finbyid(int id)
+        {
+            var p = _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).FirstOrDefault(p => p.SukienId == id);
+            var diadem = new SuKienTintucMV1
+                {
+                SukienId = p.SukienId,
+                    Tieude = p.Tieude,
+                    Motangan = p.Motangan,
+                    Mota1 = p.Mota1,
+                    Diachi = p.Diachi,
+                    SDT = p.SDT,
+                    DateOpen = p.DateOpen,
+                    DateClose = p.DateClose,
+                    TinhThanh = p.TinhThanh.TenTinh,
+                    LoaiHinh = p.LoaiHinhDL.TenLoai,
+                    Danhcho = p.Danhcho.Doituong,
+                    Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                    Imagemain = p.Imagemain,
+                    Image1 = p.Image1,
+                    Image2 = p.Image2,
+                    Image3 = p.Image3,
+                    Image4 = p.Image4,
+                    Image5 = p.Image5,
+                    Gia = p.Gia,
+                    LoaiHinhId = p.LoaiHinhId,
+                    TinhThanhId = p.TinhThanhId,
+                    DanhchoId = p.DanhchoId,
+                    LoaisukienId = p.LoaiHinhId
+
+                };
+            if (p == null)
+            {
+                return Ok(new { mesage = "Không tìm thấy sự kiện!" });
+            }
+            return Ok(diadem);
+        }
+
+
+
         [HttpGet("FillterLoaidd")]
         public async Task<IActionResult> GetLoaiHinh(int loai,int page=1)
         {
@@ -167,7 +208,48 @@ namespace My_websiteAPI.Controllers
                 totalPages = totalPages
             });
         }
+        [HttpGet("Firstsktt")]
+        public async Task<IActionResult> GetTinTucDatenow()
+        {
+            DateTime today = DateTime.Now.Date;
 
+            var p =await _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p => p.DateOpen.Date <= today)
+    .OrderByDescending(p => p.DateOpen) 
+    .FirstOrDefaultAsync();
+
+
+            var list =  new SuKienTintucMV1
+            {
+                SukienId = p.SukienId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Mota1 = p.Mota1,
+                Diachi = p.Diachi,
+                SDT = p.SDT,
+                DateOpen = p.DateOpen,
+                DateClose = p.DateClose,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                Gia = p.Gia,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                DanhchoId = p.DanhchoId,
+                LoaisukienId = p.LoaiHinhId
+
+            };
+
+
+
+            return Ok(list);
+        }
         public static string GetLoaiSuKienName(int loai)
         {
             if (loai == 1)
@@ -405,7 +487,7 @@ namespace My_websiteAPI.Controllers
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest(new { message = "Lỗi!", error = ex.Message });
+                return Ok(new { message =  ex.Message });
             }
             catch (Exception ex)
             {

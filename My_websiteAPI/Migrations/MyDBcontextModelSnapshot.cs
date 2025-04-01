@@ -224,6 +224,34 @@ namespace My_websiteAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("My_websiteAPI.Model.BannerThree", b =>
+                {
+                    b.Property<int>("BannerThreeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BannerThreeId"));
+
+                    b.Property<string>("Image1")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Image2")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Image3")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("BannerThreeId");
+
+                    b.ToTable("BannerThrees");
+                });
+
             modelBuilder.Entity("My_websiteAPI.Model.Danhcho", b =>
                 {
                     b.Property<int>("DanhchoId")
@@ -295,8 +323,8 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Diachi")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -375,8 +403,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("urlmap")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("DiadiemId");
 
@@ -505,8 +532,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Diachi")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Gia")
                         .HasColumnType("integer");

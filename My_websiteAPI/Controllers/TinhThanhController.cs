@@ -27,7 +27,7 @@ namespace My_websiteAPI.Controllers
             }).ToListAsync();
             if (!tinhthanhs.Any())
             {
-                return NotFound(new { message = "Không tìm thấy tỉnh thành nào phù hợp!" });
+                return Ok(new { message = "Không tìm thấy tỉnh thành nào phù hợp!" });
             }
 
 

@@ -12,13 +12,13 @@ namespace My_websiteAPI.Model
         [StringLength(150)]
         public string Tieude { get; set; }// Tên địa diểm
         [Required]
-        [StringLength(150)]
+        [StringLength(300)]
         public string Motangan { get; set; }// Mô tả ngắn
         
         [StringLength(100)]
         public string Mocuadongcua { get; set; }// mocuadongcua
         [Required]
-        [StringLength(50)]
+        [StringLength(500)]
         public string Diachi { get; set; } // Dia chi
         [Required]
         [StringLength(50)]
@@ -65,7 +65,7 @@ namespace My_websiteAPI.Model
         [StringLength(50)]
         public string Image5 { get; set; }
         [Required]
-        [StringLength(50)]
+  
         public string urlmap { get; set; }
 
 

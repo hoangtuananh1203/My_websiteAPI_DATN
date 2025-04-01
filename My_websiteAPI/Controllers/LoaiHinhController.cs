@@ -28,7 +28,7 @@ namespace My_websiteAPI.Controllers
             }).ToListAsync();
             if (!loaihinh.Any())
             {
-                return NotFound(new { message = "Không tìm thấy loại hình nào phù hợp!" });
+                return Ok(new { message = "Không tìm thấy loại hình nào phù hợp!" });
             }
 
 

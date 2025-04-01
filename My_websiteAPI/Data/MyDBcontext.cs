@@ -18,6 +18,7 @@ namespace My_websiteAPI.Data
         public DbSet<My_websiteAPI.Model.SukienTintuc> SukienTintuc { get; set; } = default!;
         public DbSet<My_websiteAPI.Model.TinhThanh> TinhThanh { get; set; } = default!;
         public DbSet<My_websiteAPI.Model.Danhgia> Danhgias { get; set; } = default!;
+        public DbSet<My_websiteAPI.Model.BannerThree> BannerThrees { get; set; } = default!;
 
     }
 }

@@ -67,7 +67,7 @@ namespace My_websiteAPI.Controllers
             var sotaikhoannguoidung = await _context.Users.Where(pp =>  _context.UserRoles.Any(p => p.UserId == pp.Id && p.RoleId == custommer.Id)).CountAsync();
             if (custommer == null)
             {
-                return NotFound(new { message = "Không tìm thấy vai trò Admin!" });
+                return NotFound(new { message = "Không tìm thấy người dùng nào!" });
             }
 
             var users = _context.Users.Where(pp=>_context.UserRoles.Any(p=> p.UserId==pp.Id &&p.RoleId== custommer.Id)).AsQueryable();
@@ -75,7 +75,7 @@ namespace My_websiteAPI.Controllers
             var totalItems = users.Count();
             if (totalItems == 0)
             {
-                return NotFound(new { mesage = "Không tìm thấy tài khoản nào!" });
+                return Ok(new { mesage = "Không tìm thấy tài khoản nào!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             users = users.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);

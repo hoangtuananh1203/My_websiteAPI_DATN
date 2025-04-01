@@ -26,8 +26,8 @@ namespace My_websiteAPI.Controllers
                 Doituong = p.Doituong,
 
             }).ToListAsync();
-            if (!dt.Any()) {
-                return NotFound(new { message = "Không tìm thấy đối tượng nào!" });
+            if (dt==null) {
+                return Ok(new { message = "Không tìm thấy đối tượng nào!" });
             }
             return Ok(dt);
         }

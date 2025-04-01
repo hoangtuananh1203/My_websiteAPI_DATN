@@ -25,7 +25,6 @@ namespace My_websiteAPI.Controllers
         }
         [HttpGet]
         [Authorize(Roles = Phanquyen.Admin)]
-
         public async Task<IActionResult> GetAll(int page=1)
         {
             var dt = _context.Danhgias.Include(p=>p.Diadiem).AsQueryable();
@@ -41,7 +40,7 @@ namespace My_websiteAPI.Controllers
                 DanhgiaId= p.DanhgiaId,
                 Diem =p.Diem ,
                 Noidung =p.Noidung ,
-                Ngay_add=p.Ngay_add,
+                Ngay_add=p.Ngay_add.Date,
                 Diadiem=p.Diadiem.Tieude,
                Iddiadiem=p.DiadiemId,
                 Nameuser=p.User.UserName,
@@ -52,7 +51,9 @@ namespace My_websiteAPI.Controllers
             return Ok(new
             {
                 items = list,
-                totalPages = totalPages
+                totalPages = totalPages,
+                totalItems = totalItems
+
             });
 
 
@@ -80,7 +81,7 @@ namespace My_websiteAPI.Controllers
                 DanhgiaId = p.DanhgiaId,
                 Diem = p.Diem,
                 Noidung = p.Noidung,
-                Ngay_add = p.Ngay_add,
+                Ngay_add = p.Ngay_add.Date,
                 Diadiem = p.Diadiem.Tieude,
                 Iddiadiem = p.DiadiemId,
                 Nameuser = p.User.UserName,
@@ -91,12 +92,61 @@ namespace My_websiteAPI.Controllers
             return Ok(new
             {
                 items = list,
-                totalPages = totalPages
+                totalPages = totalPages,
+                totalItems= totalItems
             });
 
 
         }
+        [HttpGet("Timdanhgia")]
+        public async Task<IActionResult> FinbysearDiem(string noidung="", int diem=0, int page = 1)
+        {
+            if (diem < 0)
+            {
+                return BadRequest(new { message = "Vui lòng nhập điểm!" });
+            }
 
+            var dt = _context.Danhgias.Include(p => p.Diadiem).AsQueryable();
+            if (!string.IsNullOrEmpty(noidung)) 
+            {
+                dt = dt.Where(p => p.Noidung.ToLower().Contains(noidung.ToLower()));
+
+            }
+            if(diem>0 && diem <= 5)
+            {
+                dt = dt.Where(p => p.Diem == diem);
+
+            }
+            var totalItems = await dt.CountAsync();
+            if (totalItems == 0)
+            {
+                return Ok(new { message = "Không tìm thấy đánh giá nào!" });
+            }
+            var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
+            dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
+
+            var list = await dt.Select(p => new DanhGiaMV
+            {
+                DanhgiaId = p.DanhgiaId,
+                Diem = p.Diem,
+                Noidung = p.Noidung,
+                Ngay_add = p.Ngay_add.Date,
+                Diadiem = p.Diadiem.Tieude,
+                Iddiadiem = p.DiadiemId,
+                Nameuser = p.User.UserName,
+
+
+            }).ToListAsync();
+
+            return Ok(new
+            {
+                items = list,
+                totalPages = totalPages,
+                totalItems= totalItems
+            });
+
+
+        }
         [HttpGet("Danhgiathongke")]
         [Authorize(Roles = Phanquyen.Admin)]
         public async Task<IActionResult> Danhgiathongke( int page = 1)
@@ -118,7 +168,7 @@ namespace My_websiteAPI.Controllers
                 DanhgiaId = p.DanhgiaId,
                 Diem = p.Diem,
                 Noidung = p.Noidung,
-                Ngay_add = p.Ngay_add,
+                Ngay_add = p.Ngay_add.Date,
                 Diadiem = p.Diadiem.Tieude,
                 Iddiadiem = p.DiadiemId,
                 Nameuser = p.User.UserName,

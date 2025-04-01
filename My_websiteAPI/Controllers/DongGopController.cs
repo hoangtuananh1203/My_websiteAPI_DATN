@@ -26,7 +26,7 @@ namespace My_websiteAPI.Controllers
             var totalItems =await dt.CountAsync();
             if (totalItems==0)
             {
-                return NotFound(new { message = "Không tìm thấy đóng góp nào!" });
+                return Ok(new { message = "Không tìm thấy đóng góp nào!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
