@@ -408,7 +408,7 @@ namespace My_websiteAPI.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchDiaDiem(string? search, int? tinhthanh=null, int? loaisukien=null, int? loaihinh = null, int? doituong = null, string? sortBy="", int page=1)
+        public async Task<IActionResult> SearchDiaDiem(string? search, int? tinhthanh=null, int? loaidiadiem = null, int? loaihinh = null, int? doituong = null, string? sortBy="", int page=1)
         {
            
             try
@@ -436,9 +436,9 @@ namespace My_websiteAPI.Controllers
                     dt = dt.Where(p => p.DanhchoId == doituong);
                 }
                 //tinhthanh
-                if (loaisukien.HasValue && loaisukien > 0)
+                if (loaidiadiem.HasValue && loaidiadiem > 0)
                 {
-                    dt = dt.Where(p => p.Loaisukien == loaisukien); 
+                    dt = dt.Where(p => p.Loaisukien == loaidiadiem); 
                 }
 
                 #endregion

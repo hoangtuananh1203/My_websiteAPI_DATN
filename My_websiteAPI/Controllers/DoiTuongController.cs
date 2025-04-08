@@ -31,6 +31,35 @@ namespace My_websiteAPI.Controllers
             }
             return Ok(dt);
         }
+        [HttpGet("GetallDT")]
+        public async Task<IActionResult> GetAllDanhcho()
+        {
+            var doituong = await _context.Danhcho.ToListAsync();
+            if (!doituong.Any())
+            {
+                return Ok(new { message = "Không tìm thấy đối tượng nào phù hợp!" });
+            }
+
+            var listlh = new List<DanhchoMV>();
+
+            foreach (var items in doituong)
+            {
+                var countlh = await _context.Diadiem.CountAsync(p => p.DanhchoId == items.DanhchoId);
+
+                var item = new DanhchoMV
+                {
+                    DanhchoId    = items.DanhchoId,
+                    Doituong = items.Doituong,
+                    sodiadiem  = countlh,
+                };
+                listlh.Add(item);
+            }
+
+
+
+            return Ok(listlh);
+
+        }
         [HttpGet("Count")]
         public async Task<IActionResult> GetCount()
         {

@@ -105,7 +105,65 @@ namespace My_websiteAPI.Controllers
             }
             return Ok(diadem);
         }
+        [HttpGet("loaihinh")]
+        public async Task<IActionResult> GetAlltheoLH(int idloaisukien,int page = 1)
+        {
+            
+            var dt = _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).AsQueryable();
+            if(idloaisukien>=1 && idloaisukien<=3)
+            {
+                dt = dt.Where(p => p.Loaisukien == idloaisukien);
+            }
+            if(idloaisukien==0)
+            {
+                dt = dt;
 
+            }
+
+
+            var totalItems = await dt.CountAsync();
+            if (totalItems == 0)
+            {
+                return Ok(new { message = "Không tìm thấy sự kiện -  tin tức nào!" });
+            }
+            var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
+            dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
+            var list = await dt.Select(p => new SuKienTintucMV1
+            {
+                SukienId = p.SukienId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Mota1 = p.Mota1,
+                Diachi = p.Diachi,
+                SDT = p.SDT,
+                DateOpen = p.DateOpen,
+                DateClose = p.DateClose,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                Gia = p.Gia,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                DanhchoId = p.DanhchoId,
+                LoaisukienId = p.LoaiHinhId
+
+            }).ToListAsync();
+
+
+
+            return Ok(new
+            {
+                items = list,
+                totalPages = totalPages
+            });
+        }
 
 
         [HttpGet("FillterLoaidd")]
@@ -213,12 +271,19 @@ namespace My_websiteAPI.Controllers
         {
             DateTime today = DateTime.Now.Date;
 
-            var p =await _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p => p.DateOpen.Date <= today)
-    .OrderByDescending(p => p.DateOpen) 
-    .FirstOrDefaultAsync();
+       
+            var p = await _context.SukienTintuc
+                .Include(p => p.TinhThanh)
+                .Include(p => p.Danhcho)
+                .Include(p => p.LoaiHinhDL)
+                .Where(p => p.DateOpen.Date >= today)
+                .OrderBy(p => p.DateOpen)
+                .FirstOrDefaultAsync();
 
+            if (p == null)
+                return NotFound("Không có sự kiện sắp diễn ra trong tương lai.");
 
-            var list =  new SuKienTintucMV1
+            var list = new SuKienTintucMV1
             {
                 SukienId = p.SukienId,
                 Tieude = p.Tieude,
@@ -243,13 +308,11 @@ namespace My_websiteAPI.Controllers
                 TinhThanhId = p.TinhThanhId,
                 DanhchoId = p.DanhchoId,
                 LoaisukienId = p.LoaiHinhId
-
             };
-
-
 
             return Ok(list);
         }
+
         public static string GetLoaiSuKienName(int loai)
         {
             if (loai == 1)

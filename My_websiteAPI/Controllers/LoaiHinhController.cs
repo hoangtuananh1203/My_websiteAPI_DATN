@@ -26,6 +26,7 @@ namespace My_websiteAPI.Controllers
                 LoaiHinhId = p.LoaiHinhId,
                 TenLoai = p.TenLoai
             }).ToListAsync();
+
             if (!loaihinh.Any())
             {
                 return Ok(new { message = "Không tìm thấy loại hình nào phù hợp!" });
@@ -33,6 +34,39 @@ namespace My_websiteAPI.Controllers
 
 
             return Ok(loaihinh);
+        }
+        [HttpGet("GetallLH")]
+        public async Task<IActionResult> GetAllLoaiHinh2()
+        {
+            var loaihinh = await _context.LoaiHinh.Select(p => new LoaiHinhDTO
+            {
+                LoaiHinhId = p.LoaiHinhId,
+                TenLoai = p.TenLoai
+            }).ToListAsync();
+            if (!loaihinh.Any())
+            {
+                return Ok(new { message = "Không tìm thấy loại hình nào phù hợp!" });
+            }
+
+            var listlh = new List<LoaiHinhMV>();
+           
+            foreach (var items in loaihinh)
+            {
+             var countlh = await _context.Diadiem.CountAsync(p=>p.LoaiHinhId== items.LoaiHinhId);
+
+                var item = new LoaiHinhMV
+                {
+                    LoaiHinhId = items.LoaiHinhId,
+                    TenLoai = items.TenLoai,
+                    sodiadiem = countlh,
+                };
+                listlh.Add(item);
+            }
+
+           
+
+            return Ok(listlh);
+
         }
         [HttpGet("countLoaiHinh")]
         public async Task<IActionResult> countLoaiHinh()
