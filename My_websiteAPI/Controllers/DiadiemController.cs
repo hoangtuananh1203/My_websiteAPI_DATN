@@ -375,6 +375,53 @@ namespace My_websiteAPI.Controllers
             });
         }
 
+        [HttpGet("diadiemlienquan")]
+        public async Task<IActionResult> diadiemlienquan(int id)
+        {
+            var dt = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).AsQueryable();
+            dt = dt.Where(p => p.LoaiHinhId == id).Take(4);
+            var totalItems = await dt.CountAsync();
+            if (totalItems == 0)
+            {
+                return NotFound(new { mesage = "Không tìm thấy địa điểm nào!" });
+            }
+           
+
+
+            var list = await dt.Select(p => new DiadiemMV
+            {
+                DiadiemId = p.DiadiemId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Diachi = p.Diachi,
+                DateOC = p.DateOC,
+                Email = p.Email,
+                SDT = p.SDT,
+                Gia = p.Gia,
+                Tinhtrang = p.Tinhtrang,
+                Noidung = p.Noidung,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Luotxem = p.Luotxem,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                urlmap = p.urlmap,
+
+
+            }).ToListAsync();
+
+            return Ok(new
+            {
+                items = list,
+                
+            });
+        }
 
         public static string GetLoaiSuKienName(int loai)
         {
@@ -396,6 +443,50 @@ namespace My_websiteAPI.Controllers
                 var dt = await _context.Diadiem.CountAsync();
 
                 return Ok(new { diadiem = dt });
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { message = "Lỗi !", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi máy chủ!", error = ex.Message });
+            }
+        }
+        [HttpGet("Soluoxem")]
+        public async Task<IActionResult> Soluotxem()
+        {
+            try
+            {
+                var dt = await _context.Diadiem.SumAsync(p=>p.Luotxem);
+
+                return Ok(new { luotxem = dt });
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { message = "Lỗi !", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi máy chủ!", error = ex.Message });
+            }
+        }
+        [HttpGet("thongkesodd")]
+        public async Task<IActionResult> thongkesodd()
+        {
+            try
+            {
+                var all = await _context.Diadiem.CountAsync();
+                var dl = await _context.Diadiem.CountAsync(p => p.Loaisukien==LoaiDiadiem.Dulich);
+                var at = await _context.Diadiem.CountAsync(p => p.Loaisukien==LoaiDiadiem.Amthuc);
+
+                return Ok(new { 
+                    all = all,
+                    dulich = dl,
+                    amthuc = at,
+
+
+                });
             }
             catch (DbUpdateException ex)
             {

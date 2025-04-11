@@ -43,7 +43,7 @@ namespace My_websiteAPI.Controllers
             var danhsachcho = await _context.ListAwait.FirstOrDefaultAsync(p=>p.UserId==user);
             if (danhsachcho == null)
             {
-                return NotFound(new {message="Không tìm thấy dịa điểm nào!"});
+                return Ok(new {message="Không tìm thấy dịa điểm nào!"});
             }
 
             var danhsach = await _context.itemListAwait.Where(p=>p.ListAwaitId==danhsachcho.ListAwaitId).ToListAsync();
@@ -127,12 +127,12 @@ namespace My_websiteAPI.Controllers
                 };
                 await _context.AddAsync(itemdanhsach);
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Thêm thànhd công địa điểm vào danh sách chờ!" });
+                return Ok(new { message = "Thêm thành công địa điểm vào danh sách chờ!" });
             }
             else
             {
                 var checksame =await _context.itemListAwait.FirstOrDefaultAsync(p => p.DiadiemId == model.DiadiemId && p.ListAwaitId== checklist.ListAwaitId);
-                if (checksame != null) { return BadRequest(new { message = "Địa điểm đã tồn tại trong danh sách!" }); }
+                if (checksame != null) { return Ok(new { message = "Địa điểm đã tồn tại trong danh sách!" }); }
                 // có danh sách ròi
                 var itemdanhsach = new itemListAwait
                 {
@@ -142,7 +142,7 @@ namespace My_websiteAPI.Controllers
                 };
                 await _context.AddAsync(itemdanhsach);
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Thêm thànhd công địa điểm vào danh sách chờ!" });
+                return Ok(new { message = "Thêm thành công địa điểm vào danh sách chờ!" });
 
             }
 

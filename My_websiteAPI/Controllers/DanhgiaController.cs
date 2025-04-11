@@ -158,7 +158,7 @@ namespace My_websiteAPI.Controllers
             var danhGiathap = _context.Danhgias.Count(p => p.Diem <=2);
             if (totalItems == 0)
             {
-                return NotFound(new { message = "Sản phẩm hiện không có đánh giá!" });
+                return Ok(new { message = "Địa điểm hiện không có đánh giá!" });
             }
             var totalPages = (int)Math.Ceiling((double)totalItems / Page_SIZE);
             dt = dt.Skip((page - 1) * Page_SIZE).Take(Page_SIZE);
@@ -198,7 +198,7 @@ namespace My_websiteAPI.Controllers
             var check =await _context.Danhgias.FirstOrDefaultAsync(p => p.UserId == user &&p.DiadiemId==model.DiadiemId);
             if (check != null)
             {
-                return BadRequest(new { message = "Bạn đã đánh giá địa điểm này rồi!" });
+                return Ok(new { message = "Bạn đã đánh giá địa điểm này rồi!" });
 
             }
             if (model.Diem<=0 || string.IsNullOrWhiteSpace(model.Noidung)) {
@@ -247,7 +247,34 @@ namespace My_websiteAPI.Controllers
             });
         }
 
+        [HttpGet("Thongkedanhgia")]
+   
+        public async Task<IActionResult> Thongkedanhgia()
+        {
+            var dt = _context.Danhgias.AsQueryable();
+            var totalItems = await dt.CountAsync();
+            var mot = _context.Danhgias.Count(p => p.Diem == 1);
+            var hai = _context.Danhgias.Count(p => p.Diem == 2); 
+            var ba = _context.Danhgias.Count(p => p.Diem == 3);
+            var bon = _context.Danhgias.Count(p => p.Diem == 4);
+            var nam = _context.Danhgias.Count(p => p.Diem == 5);
+            if (totalItems == 0)
+            {
+                return Ok(new { message = "Các địa điểm hiện không có đánh giá!" });
+            }
+          
 
+            return Ok(new
+            {tongdg= totalItems,
+               mot = mot,
+               hai=hai,
+               ba= ba,
+               bon= bon,
+               nam= nam
+            });
+
+
+        }
 
 
 

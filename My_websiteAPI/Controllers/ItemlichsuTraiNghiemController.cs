@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using My_websiteAPI.Data;
 using My_websiteAPI.Model;
 using My_websiteAPI.ModelView;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
 namespace My_websiteAPI.Controllers
@@ -99,7 +100,73 @@ namespace My_websiteAPI.Controllers
 
 
         }
+        [HttpGet("timdiadiem")]
+        public async Task<IActionResult> Searchdd(string keyword)
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Vui lòng đăng nhập!" });
+            }
 
+            var danhsachcho = await _context.LichsuTrainghiem.FirstOrDefaultAsync(p => p.UserId == user);
+            if (danhsachcho == null)
+            {
+                return NotFound(new { message = "Không tìm thấy dịa điểm nào!" });
+            }
+
+            var danhsachitem = await _context.itemLichsuTrainghiem.Where(p => p.LichsuTrainghiemId == danhsachcho.LichsuTrainghiemId).ToListAsync();
+            var listDD = new List<DiadiemDatrainghiemMV>();
+            var demsoitem = 0;
+            var diadiems = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.LoaiHinhDL).Include(p => p.Danhcho).Where(p=>p.Tieude.ToLower().Contains(keyword.ToLower())).ToList();
+            foreach (var item in danhsachitem)
+            {
+                var diadiem = diadiems.FirstOrDefault(p => p.DiadiemId == item.DiadiemId);
+                if (diadiem != null)
+                {
+                    var itemdiadiem = new DiadiemDatrainghiemMV
+                    {
+                        DiadiemId = diadiem.DiadiemId,
+                        Tieude = diadiem.Tieude,
+                        Motangan = diadiem.Motangan,
+                        Diachi = diadiem.Diachi,
+                        DateOC = diadiem.DateOC,
+                        Email = diadiem.Email,
+                        SDT = diadiem.SDT,
+                        Gia = diadiem.Gia,
+                        Tinhtrang = diadiem.Tinhtrang,
+                        Noidung = diadiem.Noidung,
+                        TinhThanh = diadiem.TinhThanh.TenTinh,
+                        LoaiHinh = diadiem.LoaiHinhDL.TenLoai,
+                        Danhcho = diadiem.Danhcho.Doituong,
+                        Luotxem = diadiem.Luotxem,
+                        Loaisukien = GetLoaiSuKienName(diadiem.Loaisukien),
+                        Imagemain = diadiem.Imagemain,
+                        Image1 = diadiem.Image1,
+                        Image2 = diadiem.Image2,
+                        Image3 = diadiem.Image3,
+                        Image4 = diadiem.Image4,
+                        Image5 = diadiem.Image5,
+                        itemTrainghiem = item.itemLichsuTrainghiemId,
+                        DateAdd = item.Date.Date,
+                        trainghiem = item.LichsuTrainghiemId,
+                    };
+                    listDD.Add(itemdiadiem);
+                    demsoitem++;
+                }
+
+
+            }
+
+            return Ok(new
+            {
+                soitem = demsoitem,
+                itemdiadiem = listDD
+
+            });
+
+
+        }
         [HttpPost]
         [Authorize(Roles = Phanquyen.Custommer)]
         public async Task<IActionResult> Create(ItemLichSuTraiNghiemDTO model)
@@ -133,7 +200,7 @@ namespace My_websiteAPI.Controllers
             else
             {
                 var checksame = await _context.itemLichsuTrainghiem.FirstOrDefaultAsync(p => p.DiadiemId == model.DiadiemId && p.LichsuTrainghiemId == checklist.LichsuTrainghiemId);
-                if (checksame != null) { return BadRequest(new { message = "Địa điểm đã tồn tại trong danh sách đã trải nghiệm!" }); }
+                if (checksame != null) { return Ok(new { message = "Địa điểm đã tồn tại trong danh sách đã trải nghiệm!" }); }
                 // có danh sách ròi
                 var itemdanhsach = new itemLichsuTrainghiem
                 {
