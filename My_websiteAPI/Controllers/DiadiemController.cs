@@ -79,8 +79,8 @@ namespace My_websiteAPI.Controllers
         [HttpGet("thinhhanh")]
         public async Task<IActionResult> GetfiveIndex()
         {
-            var dt2 = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Take(2).OrderByDescending(p=>p.Luotxem);
-            var dt3 =  _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Take(3).OrderByDescending(p=>p.Luotxem);
+            var dt2 = _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p => p.Loaisukien== LoaiDiadiem.Dulich).Take(2).OrderBy(p=>p.Luotxem);
+            var dt3 =  _context.Diadiem.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).Where(p => p.Loaisukien == LoaiDiadiem.Amthuc).Take(3).OrderBy(p=>p.Luotxem);
 
          
 

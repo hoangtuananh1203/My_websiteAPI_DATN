@@ -379,8 +379,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Motangan")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Noidung")
                         .IsRequired()
@@ -579,8 +578,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Motangan")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SDT")
                         .IsRequired()

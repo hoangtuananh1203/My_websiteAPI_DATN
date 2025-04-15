@@ -164,6 +164,54 @@ namespace My_websiteAPI.Controllers
                 totalPages = totalPages
             });
         }
+        [HttpGet("diadiemlienquan")]
+        public async Task<IActionResult> diadiemlienquan(int id)
+        {
+            var dt = _context.SukienTintuc.Include(p => p.TinhThanh).Include(p => p.Danhcho).Include(p => p.LoaiHinhDL).AsQueryable();
+            dt = dt.Where(p => p.LoaiHinhId == id).Take(4);
+            var totalItems = await dt.CountAsync();
+            if (totalItems == 0)
+            {
+                return NotFound(new { message = "Không tìm thấy sự kiện nào!" });
+            }
+
+
+
+            var list = await dt.Select(p => new SuKienTintucMV1
+            {
+                SukienId = p.SukienId,
+                Tieude = p.Tieude,
+                Motangan = p.Motangan,
+                Mota1 = p.Mota1,
+                Diachi = p.Diachi,
+                SDT = p.SDT,
+                DateOpen = p.DateOpen,
+                DateClose = p.DateClose,
+                TinhThanh = p.TinhThanh.TenTinh,
+                LoaiHinh = p.LoaiHinhDL.TenLoai,
+                Danhcho = p.Danhcho.Doituong,
+                Loaisukien = GetLoaiSuKienName(p.Loaisukien),
+                Imagemain = p.Imagemain,
+                Image1 = p.Image1,
+                Image2 = p.Image2,
+                Image3 = p.Image3,
+                Image4 = p.Image4,
+                Image5 = p.Image5,
+                Gia = p.Gia,
+                LoaiHinhId = p.LoaiHinhId,
+                TinhThanhId = p.TinhThanhId,
+                DanhchoId = p.DanhchoId
+               
+
+            }).ToListAsync();
+
+
+            return Ok(new
+            {
+                items = list,
+
+            });
+        }
 
 
         [HttpGet("FillterLoaidd")]

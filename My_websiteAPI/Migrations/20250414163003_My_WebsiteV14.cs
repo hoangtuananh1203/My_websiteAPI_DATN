@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace My_websiteAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class My_WebsiteV9 : Migration
+    public partial class My_WebsiteV14 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -277,7 +277,7 @@ namespace My_websiteAPI.Migrations
                     DiadiemId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Tieude = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Motangan = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Motangan = table.Column<string>(type: "text", nullable: false),
                     Mocuadongcua = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Diachi = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     DateOC = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -329,7 +329,7 @@ namespace My_websiteAPI.Migrations
                     SukienId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Tieude = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Motangan = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Motangan = table.Column<string>(type: "text", nullable: false),
                     Diachi = table.Column<string>(type: "text", nullable: false),
                     DateOpen = table.Column<DateTime>(type: "date", nullable: false),
                     DateClose = table.Column<DateTime>(type: "date", nullable: false),

@@ -146,7 +146,7 @@ namespace My_websiteAPI.Controllers
                     Name = model.Name,
                     Email = model.Email,
                     SDT = model.SDT,
-                    Date = model.Date,
+                    Date =  DateTime.Now,
                    trangthai = TrangthaiDonggop.chuaxem,
                 };
                 await _context.Donggop.AddAsync(newdt);

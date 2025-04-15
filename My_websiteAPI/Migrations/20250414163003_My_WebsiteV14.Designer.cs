@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace My_websiteAPI.Migrations
 {
     [DbContext(typeof(MyDBcontext))]
-    [Migration("20250331115154_My_WebsiteV9")]
-    partial class My_WebsiteV9
+    [Migration("20250414163003_My_WebsiteV14")]
+    partial class My_WebsiteV14
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -382,8 +382,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Motangan")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Noidung")
                         .IsRequired()
@@ -582,8 +581,7 @@ namespace My_websiteAPI.Migrations
 
                     b.Property<string>("Motangan")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SDT")
                         .IsRequired()

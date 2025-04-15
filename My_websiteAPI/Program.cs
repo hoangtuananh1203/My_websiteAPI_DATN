@@ -1,3 +1,4 @@
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 var conf = builder.Configuration;
+builder.Services.AddSingleton(new ElasticsearchClient(new ElasticsearchClientSettings(new Uri("http://localhost:9200"))));
+
 // cau hinh cho cac client co the sd 
 builder.Services.AddCors(option =>
 {

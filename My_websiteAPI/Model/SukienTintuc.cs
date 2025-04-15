@@ -13,7 +13,7 @@ namespace My_websiteAPI.Model
         public string Tieude { get; set; }// Tên địa diểm  
         [Required]
 
-        [StringLength(300)]
+
         public string Motangan { get; set; }// Mota ngan
         [Required]
         
